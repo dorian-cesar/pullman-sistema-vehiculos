@@ -68,7 +68,7 @@ foreach ($vehiculos as $v) {
     $ubicacion = (isset($v['prop18']) ? $v['prop18'] : "");
     
     // Verificar si centroCosto comienza con 'ACTIVO'
-    if (strpos($centroCosto, 'ACTIVO') === 0) {
+    if (strpos($estado, 'ACTIVO') === 0) {
         $data = array(
             'patente' => $patente,
             'nroInterno' => $nroInterno,
