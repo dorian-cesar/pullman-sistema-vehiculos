@@ -1,6 +1,29 @@
 <?php
 
-set_time_limit(6000);
+set_time_limit(1000);
+
+// Conexión a la base de datos
+$servername = "ls-3c0c538286def4da7f8273aa5531e0b6eee0990c.cylsiewx0zgx.us-east-1.rds.amazonaws.com"; // Cambiar si es necesario
+$username = "dbmasteruser"; // Cambiar si es necesario
+$password = "eF5D;6VzP$^7qDryBzDd,`+w(5e4*qI+"; // Cambiar si es necesario
+$dbname = "masgps";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Verificar la conexión
+if ($conn->connect_error) {
+    die("Conexión fallida: " . $conn->connect_error);
+}
+
+// Truncate de la tabla infoVehiculos
+$sql = "TRUNCATE TABLE infoVehiculos";
+if ($conn->query($sql) === TRUE) {
+    echo "Tabla infoVehiculos truncada correctamente.\n";
+} else {
+    echo "Error truncando la tabla: " . $conn->error . "\n";
+}
+
+$conn->close();
 
 $curl = curl_init();
 
