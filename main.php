@@ -3,10 +3,11 @@
 set_time_limit(300);
 
 // Conexión a la base de datos
-$servername = "localhost"; // Cambiar si es necesario
-$username = "root"; // Cambiar si es necesario
-$password = ""; // Cambiar si es necesario
-$dbname = "vehiculos";
+
+$servername = "ls-3c0c538286def4da7f8273aa5531e0b6eee0990c.cylsiewx0zgx.us-east-1.rds.amazonaws.com"; // Cambiar si es necesario
+$username = "dbmasteruser"; // Cambiar si es necesario
+$password = "eF5D;6VzP$^7qDryBzDd,`+w(5e4*qI+"; // Cambiar si es necesario
+$dbname = "masgps";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
