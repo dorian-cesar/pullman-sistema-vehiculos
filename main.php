@@ -1,12 +1,12 @@
 <?php
-
-set_time_limit(1000);
+// Aumentar el tiempo máximo de ejecución a 300 segundos (5 minutos)
+set_time_limit(300);
 
 // Conexión a la base de datos
-$servername = "ls-3c0c538286def4da7f8273aa5531e0b6eee0990c.cylsiewx0zgx.us-east-1.rds.amazonaws.com"; // Cambiar si es necesario
-$username = "dbmasteruser"; // Cambiar si es necesario
-$password = "eF5D;6VzP$^7qDryBzDd,`+w(5e4*qI+"; // Cambiar si es necesario
-$dbname = "masgps";
+$servername = "localhost"; // Cambiar si es necesario
+$username = "root"; // Cambiar si es necesario
+$password = ""; // Cambiar si es necesario
+$dbname = "vehiculos";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -66,46 +66,49 @@ foreach ($vehiculos as $v) {
     $flota = (isset($v['prop21']) ? $v['prop21'] : "");
     $ubicacion = (isset($v['prop18']) ? $v['prop18'] : "");
     
-    $data = array(
-        'patente' => $patente,
-        'nroInterno' => $nroInterno,
-        'centroCosto' => $centroCosto,
-        'marcaChasis' => $marcaChasis,
-        'modeloChasis' => $modeloChasis,
-        'marcaCarroceria' => $marcaCarroceria,
-        'modeloCarroceria' => $modeloCarroceria,
-        'ano' => $ano,
-        'unidadNegocio' => $unidadNegocio,
-        'estado' => $estado,
-        'flota' => $flota,
-        'ubicacion' => $ubicacion
-    );
+    // Verificar si centroCosto comienza con 'ACTIVO'
+    if (strpos($centroCosto, 'ACTIVO') === 0) {
+        $data = array(
+            'patente' => $patente,
+            'nroInterno' => $nroInterno,
+            'centroCosto' => $centroCosto,
+            'marcaChasis' => $marcaChasis,
+            'modeloChasis' => $modeloChasis,
+            'marcaCarroceria' => $marcaCarroceria,
+            'modeloCarroceria' => $modeloCarroceria,
+            'ano' => $ano,
+            'unidadNegocio' => $unidadNegocio,
+            'estado' => $estado,
+            'flota' => $flota,
+            'ubicacion' => $ubicacion
+        );
 
-    $jsonData = json_encode($data);
-    
-    // Limitar el número de procesos paralelos
-    while (count($processes) >= $maxProcesses) {
-        foreach ($processes as $key => $process) {
-            $status = proc_get_status($process);
-            if (!$status['running']) {
-                proc_close($process);
-                unset($processes[$key]);
+        $jsonData = json_encode($data);
+        
+        // Limitar el número de procesos paralelos
+        while (count($processes) >= $maxProcesses) {
+            foreach ($processes as $key => $process) {
+                $status = proc_get_status($process);
+                if (!$status['running']) {
+                    proc_close($process);
+                    unset($processes[$key]);
+                }
             }
+            usleep(100000); // Esperar 0.1 segundos antes de volver a verificar
         }
-        usleep(100000); // Esperar 0.1 segundos antes de volver a verificar
-    }
 
-    // Abrir un nuevo proceso
-    $descriptorspec = array(
-       0 => array("pipe", "r"),  // stdin
-       1 => array("pipe", "w"),  // stdout
-       2 => array("pipe", "w")   // stderr
-    );
+        // Abrir un nuevo proceso
+        $descriptorspec = array(
+           0 => array("pipe", "r"),  // stdin
+           1 => array("pipe", "w"),  // stdout
+           2 => array("pipe", "w")   // stderr
+        );
 
-    $process = proc_open("php insert.php " . escapeshellarg($jsonData), $descriptorspec, $pipes);
+        $process = proc_open("php insert.php " . escapeshellarg($jsonData), $descriptorspec, $pipes);
 
-    if (is_resource($process)) {
-        $processes[] = $process;
+        if (is_resource($process)) {
+            $processes[] = $process;
+        }
     }
 }
 
