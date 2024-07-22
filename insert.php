@@ -17,10 +17,10 @@ if ($conn->connect_error) {
     die("Conexión fallida: " . $conn->connect_error);
 }
 
-$sql = "INSERT INTO infoVehiculos (patente, nroInterno, centroCosto, marcaChasis, modeloChasis, marcaCarroceria, modeloCarroceria, ano, unidadNegocio, estado, flota, ubicacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+$sql = "INSERT INTO infoVehiculos (patente, nroInterno, centroCosto, marcaChasis, modeloChasis, marcaCarroceria, modeloCarroceria, ano, unidadNegocio, estado, flota, ubicacion, descCentroCosto) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("ssssssssssss", $data['patente'], $data['nroInterno'], $data['centroCosto'], $data['marcaChasis'], $data['modeloChasis'], $data['marcaCarroceria'], $data['modeloCarroceria'], $data['ano'], $data['unidadNegocio'], $data['estado'], $data['flota'], $data['ubicacion']);
+$stmt->bind_param("sssssssssssss", $data['patente'], $data['nroInterno'], $data['centroCosto'], $data['marcaChasis'], $data['modeloChasis'], $data['marcaCarroceria'], $data['modeloCarroceria'], $data['ano'], $data['unidadNegocio'], $data['estado'], $data['flota'], $data['ubicacion'], $data['descCentroCosto']);
 
 if ($stmt->execute()) {
     echo "Registro insertado correctamente.\n";

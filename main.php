@@ -50,7 +50,7 @@ curl_close($curl);
 $vehiculos_data = json_decode($response, true);
 $vehiculos = array_slice($vehiculos_data['response'], 2);
 
-$maxProcesses = 50; // Número máximo de procesos paralelos
+$maxProcesses = 20; // Número máximo de procesos paralelos
 $processes = [];
 
 foreach ($vehiculos as $v) {
@@ -66,6 +66,7 @@ foreach ($vehiculos as $v) {
     $estado = (isset($v['prop13']) ? $v['prop13'] : "");
     $flota = (isset($v['prop21']) ? $v['prop21'] : "");
     $ubicacion = (isset($v['prop18']) ? $v['prop18'] : "");
+    $descCentroCosto = (isset($v['prop20']) ? $v['prop20'] : "");
     
     // Verificar si centroCosto comienza con 'ACTIVO'
     if (strpos($estado, 'ACTIVO') === 0) {
@@ -81,7 +82,8 @@ foreach ($vehiculos as $v) {
             'unidadNegocio' => $unidadNegocio,
             'estado' => $estado,
             'flota' => $flota,
-            'ubicacion' => $ubicacion
+            'ubicacion' => $ubicacion,
+            'descCentroCosto'=>$descCentroCosto
         );
 
         $jsonData = json_encode($data);
