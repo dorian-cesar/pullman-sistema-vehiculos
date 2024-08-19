@@ -68,10 +68,11 @@ foreach ($vehiculos_batches as $batch) {
         $flota = (isset($v['prop21']) ? $v['prop21'] : "");
         $ubicacion = (isset($v['prop18']) ? $v['prop18'] : "");
         $descCentroCosto = (isset($v['prop20']) ? $v['prop20'] : "");
+        $descFlota = (isset($v['prop22']) ? $v['prop22'] : "");
 
-        if (strpos($estado, 'ACTIVO') === 0) {
+       // if (strpos($estado, 'ACTIVO') === 0) {
             // Crear la consulta de inserción
-            $sql = "INSERT INTO infoVehiculos (patente, nroInterno, centroCosto, marcaChasis, modeloChasis, marcaCarroceria, modeloCarroceria, ano, unidadNegocio, estado, flota, ubicacion, descCentroCosto) VALUES ('$patente', '$nroInterno', '$centroCosto', '$marcaChasis', '$modeloChasis', '$marcaCarroceria', '$modeloCarroceria', '$ano', '$unidadNegocio', '$estado', '$flota', '$ubicacion', '$descCentroCosto')";
+            $sql = "INSERT INTO infoVehiculos (patente, nroInterno, centroCosto, marcaChasis, modeloChasis, marcaCarroceria, modeloCarroceria, ano, unidadNegocio, estado, flota, ubicacion, descCentroCosto,descFlota) VALUES ('$patente', '$nroInterno', '$centroCosto', '$marcaChasis', '$modeloChasis', '$marcaCarroceria', '$modeloCarroceria', '$ano', '$unidadNegocio', '$estado', '$flota', '$ubicacion', '$descCentroCosto','$descFlota')";
             
             curl_setopt($ch, CURLOPT_URL, 'http://3.81.103.141/pullman-sistema-vehiculos/insertion-endpoint.php'); // Debes crear un endpoint para manejar la inserción en la misma máquina.
             curl_setopt($ch, CURLOPT_POST, 1);
@@ -79,7 +80,7 @@ foreach ($vehiculos_batches as $batch) {
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_multi_add_handle($multi_curl, $ch);
             $handles[] = $ch; 
-        }
+      //  }
     }
 
     // Ejecutar todas las solicitudes en paralelo
